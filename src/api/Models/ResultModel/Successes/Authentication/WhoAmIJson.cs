@@ -1,12 +1,15 @@
-using api.Models.EntityModel;
 using api.Models.EntityModel.Users;
 using api.Models.ResultModel.Successes.Employees;
+using api.Models.ServiceModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
-namespace api.Models.ResultModel.Successes
+namespace api.Results.v2.Authentication
 {
     public class WhoAmIJson : IActionResult
     {
+        public WhoAmIJson() { }
+
         public WhoAmIJson(User user)
         {
             User = new UserJson(user);

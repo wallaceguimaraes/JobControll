@@ -21,8 +21,7 @@ namespace api.Models.ServiceModel
             _dbContext = dbContext;
             _authOptions = authOptionsAccessor.Value;
         }
-
-
+        private const string USER_NOT_FOUND = "USER_NOT_FOUND";
         public User User { get; private set; }
 
         public async Task<(bool, User)> SignIn(string login, string password)
@@ -34,6 +33,20 @@ namespace api.Models.ServiceModel
             if (User == null) return (false, null);
 
             return (User.Password == password.Encrypt(User.Salt), User);
+        }
+
+        public async Task<(User?, string?)> FindUser(int holderId, string salt)
+        {
+            var queryUser = _dbContext.Users
+              .WhereId(holderId)
+              .WhereSalt(salt);
+
+            User = await queryUser.SingleOrDefaultAsync();
+
+            if (User is null)
+                return (User, USER_NOT_FOUND);
+
+            return (User, null);
         }
     }
 }

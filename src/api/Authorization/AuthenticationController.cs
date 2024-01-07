@@ -2,7 +2,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using api.Authorization;
+using api.Extensions.Http;
+using api.Extensions.Identity;
+using api.Filters;
 using api.Models.Interfaces;
+using api.Models.ResultModel.Errors;
+using api.Models.ResultModel.Successes;
 using api.Models.ViewModel;
 using api.ResultModel.Successes.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +56,20 @@ namespace api.Controllers
                 signingCredentials: creds
             );
 
-            return new TokenJson(new JwtSecurityTokenHandler().WriteToken(token), user);
+            return new TokenJson(new JwtSecurityTokenHandler().WriteToken(token));
+        }
+
+        [HttpGet, Route("whoami"), Auth]
+        public async Task<IActionResult> WhoAmI()
+        {
+            var user = HttpContext.WhoAmI().User;
+
+            if (user is null)
+            {
+                return new NotFoundRequestJson("USER_NOT_FOUND");
+            }
+
+            return new WhoAmIJson(user);
         }
 
     }

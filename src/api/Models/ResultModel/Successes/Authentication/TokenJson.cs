@@ -7,14 +7,12 @@ namespace api.ResultModel.Successes.Authentication
     {
         public TokenJson() { }
 
-        public TokenJson(string token, User user)
+        public TokenJson(string token)
         {
             Token = token;
-            User = user;
         }
 
         public string Token { get; set; }
-        public User User { get; set; }
 
         public async Task ExecuteResultAsync(ActionContext context)
         {
