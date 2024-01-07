@@ -192,5 +192,8 @@ Use this user already registered in the database
 "login": "teste",
 "password": "12345678"
 
-The database is temporarily hosted on the heroku server.
+Create database in Docker conteiner use
+
+docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=' -p 1433:1433 --name SQLServerLocal -d mcr.microsoft.com/mssql/server
+
 

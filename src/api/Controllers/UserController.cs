@@ -37,7 +37,7 @@ namespace api.Controllers
             return new UserJson(user);
         }
 
-        [HttpPost, Auth]
+        [HttpPost]
         public async Task<IActionResult> Create([FromBody] UserModel model)
         {
             var (user, error) = await _service.CreateUser(model);

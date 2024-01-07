@@ -1,10 +1,11 @@
 using System.Text;
 using api.Authorization;
 using api.Models.Interfaces;
-// using api.Models.ServiceModel;
+using api.Models.ServiceModel;
+using api.Models.ServiceModel.Users;
+
 // using api.Models.ServiceModel.Projects;
 // using api.Models.ServiceModel.Times;
-// using api.Models.ServiceModel.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -41,8 +42,8 @@ namespace api.Extensions.DependencyInjection
 
         public static void AddTransientServices(this IServiceCollection services)
         {
-            // services.AddTransient<IUserAuthentication, UserAuthentication>();
-            // services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserAuthentication, UserAuthentication>();
+            services.AddTransient<IUserService, UserService>();
             // services.AddTransient<IProjectService, ProjectService>();
             // services.AddTransient<ITimeService, TimeService>();
 

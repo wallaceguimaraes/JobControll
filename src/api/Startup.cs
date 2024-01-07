@@ -39,7 +39,7 @@ namespace api
             {
                 options.UseSqlServer(Configuration["ConnectionStrings:ConnectionString"], mssql =>
                 {
-                    mssql.MigrationsHistoryTable(tableName: "__MigrationHistory", schema: "JobControll");
+                    mssql.MigrationsHistoryTable(tableName: "__MigrationHistory", schema: "cadastro");
                 });
             });
 
