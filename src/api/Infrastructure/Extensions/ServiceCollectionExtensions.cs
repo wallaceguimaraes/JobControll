@@ -1,11 +1,12 @@
 using System.Text;
 using api.Authorization;
+using api.Models.EntityModel.Jobs;
 using api.Models.Interfaces;
 using api.Models.ServiceModel;
+using api.Models.ServiceModel.Jobs;
+using api.Models.ServiceModel.Projects;
+using api.Models.ServiceModel.Times;
 using api.Models.ServiceModel.Users;
-
-// using api.Models.ServiceModel.Projects;
-// using api.Models.ServiceModel.Times;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -44,8 +45,10 @@ namespace api.Extensions.DependencyInjection
         {
             services.AddTransient<IUserAuthentication, UserAuthentication>();
             services.AddTransient<IUserService, UserService>();
-            // services.AddTransient<IProjectService, ProjectService>();
-            // services.AddTransient<ITimeService, TimeService>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IJobService, JobService>();
+            services.AddTransient<ITimeService, TimeService>();
+
 
         }
 

@@ -163,5 +163,14 @@ namespace api.Models.ServiceModel.Users
             return user;
         }
 
+        public async Task<bool> CheckUserExisting(int userId)
+        {
+            var userExists = await _dbContext.Users.WhereId(userId)
+                                             .AnyAsync();
+
+            return userExists;
+        }
+
+
     }
 }

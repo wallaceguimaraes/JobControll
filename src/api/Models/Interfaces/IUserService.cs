@@ -10,5 +10,6 @@ namespace api.Models.Interfaces
         Task<(User? user, string error)> UpdateUser(UserModel model, int userId);
         Task<(List<User>? users, string error)> FindUsers(ICollection<int> userIds);
         Task<User?> FindUserAuthenticated(string userId);
+        Task<bool> CheckUserExisting(int userId);
     }
 }

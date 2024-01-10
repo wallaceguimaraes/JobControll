@@ -1,5 +1,7 @@
 // using api.Models.EntityModel.Times;
 
+using api.Models.EntityModel.Jobs;
+
 namespace api.Models.EntityModel.Users
 {
     public class User
@@ -12,7 +14,7 @@ namespace api.Models.EntityModel.Users
         public string? Password { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? LastUpdateAt { get; set; }
-        // public ICollection<Time>? Times { get; set; }
+        public ICollection<Job>? Jobs { get; set; }
 
     }
 }
