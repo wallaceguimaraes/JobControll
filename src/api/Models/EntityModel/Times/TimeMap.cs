@@ -11,6 +11,7 @@ namespace api.Models.EntityModel.Times
 
             entity.HasKey(p => p.Id);
             entity.Property(p => p.Id).HasColumnName("Id").UseIdentityColumn();
+            entity.Property(e => e.JobId).HasColumnName("IdTarefa");
             entity.Property(p => p.StartedAt).HasColumnName("DataInicio").IsRequired();
             entity.Property(p => p.EndedAt).HasColumnName("DataFim");
             entity.HasOne(p => p.Job).WithMany(p => p.Times).HasForeignKey(p => p.JobId).OnDelete(DeleteBehavior.Cascade);

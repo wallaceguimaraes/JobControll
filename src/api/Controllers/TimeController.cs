@@ -22,8 +22,9 @@ namespace api.Controllers
         [HttpPost, Auth]
         public async Task<IActionResult> Create([FromBody] TimeModel model)
         {
-            var response = await _service.CreateTime(model.Map());
-            if (!String.IsNullOrEmpty(response.error))
+            var whoami = HttpContext.WhoAmI();
+            var response = await _service.CreateTime(model.Map(), whoami.User.Id);
+            if (!string.IsNullOrEmpty(response.error))
             {
                 if (response.error.Equals("JOB_NOT_FOUND"))
                     return new NotFoundRequestJson(response.error);
@@ -34,7 +35,7 @@ namespace api.Controllers
             return new TimeJson(response.time);
         }
 
-        [HttpGet, Route("{project_id}"), Auth]
+        [HttpGet, Route("{job_id}"), Auth]
         public async Task<IActionResult> GetTimesByJob([FromRoute] string job_id)
         {
             if (String.IsNullOrEmpty(job_id))
@@ -55,6 +56,7 @@ namespace api.Controllers
             return new TimeListJson(response.times);
         }
 
+        // Finalize Time
         [HttpPut, Route("{time_id}"), Auth]
         public async Task<IActionResult> UpdateTime([FromBody] TimeModel model, [FromRoute] string time_id)
         {
@@ -68,11 +70,11 @@ namespace api.Controllers
 
             var whoami = HttpContext.WhoAmI();
 
-            var response = await _service.UpdateTime(model, id, model.JobId);
+            var response = await _service.UpdateTime(model, id, model.JobId, whoami.User.Id);
 
             if (!String.IsNullOrEmpty(response.error))
             {
-                if (response.error.Equals("JOB_NOT_FOUND"))
+                if (response.error.Equals("JOB_NOT_FOUND") || response.error.Equals("TIME_NOT_FOUND"))
                     return new NotFoundRequestJson(response.error);
 
                 return new UnprocessableEntityJson(response.error);

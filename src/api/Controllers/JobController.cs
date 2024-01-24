@@ -39,5 +39,16 @@ namespace api.Controllers
 
             return new JobJson(response.job);
         }
+
+        //Criar lista de jobs com contagem de tempo trabalhado em cada funcionalidade
+
+        [HttpGet, Auth]
+        public async Task<IActionResult> GetAllJobs()
+        {
+            var whoami = HttpContext.WhoAmI();
+            var projects = await _service.GetAllJobs(whoami.User.Id);
+            //Adicionar contagem de tempo trabalhado nos projetos, horas e dias
+            return new JobListJson(projects);
+        }
     }
 }

@@ -9,11 +9,14 @@ namespace api.Models.ViewModel.Times
         [JsonProperty("job_id"), JsonRequiredValidate]
         public int JobId { get; set; }
 
+        [JsonProperty("description")]
+        public string? Description { get; set; }
+
         [JsonProperty("started_at"), JsonRequiredValidate]
         public DateTime StartedAt { get; set; }
 
-        [JsonProperty("ended_at"), JsonRequiredValidate]
-        public DateTime EndedAt { get; set; }
+        [JsonProperty("ended_at")]
+        public DateTime? EndedAt { get; set; }
 
         [JsonValidIf(ErrorMessage = "ended_at cannot be less than or equal to started_at")]
         public bool EndedAtIsValid => !(EndedAt <= StartedAt);

@@ -3,10 +3,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace api.Migrations
 {
-    public partial class CreateProjectJobTime : Migration
+    public partial class AddCreateInitialTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "cadastro");
+
             migrationBuilder.CreateTable(
                 name: "Projeto",
                 schema: "cadastro",
@@ -25,14 +28,34 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Usuario",
+                schema: "cadastro",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Salt = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Login = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Senha = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UltimaAtualizacao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Usuario", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tarefa",
                 schema: "cadastro",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    IdUsuario = table.Column<int>(type: "int", nullable: false),
+                    IdProjeto = table.Column<int>(type: "int", nullable: false),
                     Titulo = table.Column<string>(type: "nvarchar(45)", maxLength: 45, nullable: true),
                     Descricao = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -42,19 +65,19 @@ namespace api.Migrations
                 {
                     table.PrimaryKey("PK_Tarefa", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tarefa_Projeto_ProjectId",
-                        column: x => x.ProjectId,
+                        name: "FK_Tarefa_Projeto_IdProjeto",
+                        column: x => x.IdProjeto,
                         principalSchema: "cadastro",
                         principalTable: "Projeto",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Tarefa_Usuario_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Tarefa_Usuario_IdUsuario",
+                        column: x => x.IdUsuario,
                         principalSchema: "cadastro",
                         principalTable: "Usuario",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,16 +116,48 @@ namespace api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    JobId = table.Column<int>(type: "int", nullable: false),
+                    IdTarefa = table.Column<int>(type: "int", nullable: false),
                     DataInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataFim = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DataFim = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tempo", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tempo_Tarefa_JobId",
-                        column: x => x.JobId,
+                        name: "FK_Tempo_Tarefa_IdTarefa",
+                        column: x => x.IdTarefa,
+                        principalSchema: "cadastro",
+                        principalTable: "Tarefa",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TempoTrabalhado",
+                schema: "cadastro",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdProjeto = table.Column<int>(type: "int", nullable: true),
+                    IdTarefa = table.Column<int>(type: "int", nullable: true),
+                    Horas = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    Dias = table.Column<int>(type: "int", nullable: true),
+                    Meses = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TempoTrabalhado", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TempoTrabalhado_Projeto_IdProjeto",
+                        column: x => x.IdProjeto,
+                        principalSchema: "cadastro",
+                        principalTable: "Projeto",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TempoTrabalhado_Tarefa_IdTarefa",
+                        column: x => x.IdTarefa,
                         principalSchema: "cadastro",
                         principalTable: "Tarefa",
                         principalColumn: "Id",
@@ -110,22 +165,52 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tarefa_ProjectId",
+                name: "IX_Tarefa_IdProjeto",
                 schema: "cadastro",
                 table: "Tarefa",
-                column: "ProjectId");
+                column: "IdProjeto");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tarefa_UserId",
+                name: "IX_Tarefa_IdUsuario",
                 schema: "cadastro",
                 table: "Tarefa",
-                column: "UserId");
+                column: "IdUsuario");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tempo_JobId",
+                name: "IX_Tempo_IdTarefa",
                 schema: "cadastro",
                 table: "Tempo",
-                column: "JobId");
+                column: "IdTarefa");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempoTrabalhado_IdProjeto",
+                schema: "cadastro",
+                table: "TempoTrabalhado",
+                column: "IdProjeto",
+                unique: true,
+                filter: "[IdProjeto] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TempoTrabalhado_IdTarefa",
+                schema: "cadastro",
+                table: "TempoTrabalhado",
+                column: "IdTarefa",
+                unique: true,
+                filter: "[IdTarefa] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuario_Email",
+                schema: "cadastro",
+                table: "Usuario",
+                column: "Email",
+                unique: true,
+                filter: "[Email] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Usuario_Login",
+                schema: "cadastro",
+                table: "Usuario",
+                column: "Login");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UsuarioProjeto_ProjectId",
@@ -147,6 +232,10 @@ namespace api.Migrations
                 schema: "cadastro");
 
             migrationBuilder.DropTable(
+                name: "TempoTrabalhado",
+                schema: "cadastro");
+
+            migrationBuilder.DropTable(
                 name: "UsuarioProjeto",
                 schema: "cadastro");
 
@@ -156,6 +245,10 @@ namespace api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Projeto",
+                schema: "cadastro");
+
+            migrationBuilder.DropTable(
+                name: "Usuario",
                 schema: "cadastro");
         }
     }

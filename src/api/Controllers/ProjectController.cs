@@ -24,7 +24,7 @@ namespace api.Controllers
         {
             var whoami = HttpContext.WhoAmI();
             var projects = await _service.GetAllProjects(whoami.User.Id);
-
+            //Adicionar contagem de tempo trabalhado nos projetos, horas e dias
             return new ProjectListJson(projects);
         }
 

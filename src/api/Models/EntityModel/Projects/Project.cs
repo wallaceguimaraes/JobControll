@@ -1,8 +1,6 @@
-// using api.Models.EntityModel.Times;
-// using api.Models.EntityModel.UserProjects;
-
 using api.Models.EntityModel.Jobs;
 using api.Models.EntityModel.UserProjects;
+using api.Models.EntityModel.WorkedTimes;
 
 namespace api.Models.EntityModel.Projects
 {
@@ -15,6 +13,6 @@ namespace api.Models.EntityModel.Projects
         public DateTime? LastUpdateAt { get; set; }
         public ICollection<Job>? Jobs { get; set; }
         public ICollection<UserProject>? UserProjects { get; set; }
-
+        public WorkedTime? WorkedTime { get; set; }
     }
 }

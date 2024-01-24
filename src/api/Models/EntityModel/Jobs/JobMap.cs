@@ -19,8 +19,10 @@ namespace api.Models.EntityModel.Jobs
             entity.Property(p => p.Description).HasColumnName("Descricao").HasMaxLength(150);
             entity.Property(p => p.CreatedAt).HasColumnName("DataCriacao").IsRequired();
             entity.Property(p => p.LastUpdateAt).HasColumnName("UltimaAtualizacao");
-            entity.HasOne(p => p.Project).WithMany(p => p.Jobs).HasForeignKey(p => p.ProjectId).OnDelete(DeleteBehavior.Cascade);
-            entity.HasOne(p => p.User).WithMany(p => p.Jobs).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Cascade);
+            entity.Property(e => e.UserId).HasColumnName("IdUsuario");
+            entity.Property(e => e.ProjectId).HasColumnName("IdProjeto");
+            entity.HasOne(p => p.Project).WithMany(p => p.Jobs).HasForeignKey(p => p.ProjectId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(p => p.User).WithMany(p => p.Jobs).HasForeignKey(p => p.UserId).OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

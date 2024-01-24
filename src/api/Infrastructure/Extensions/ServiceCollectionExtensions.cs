@@ -7,6 +7,7 @@ using api.Models.ServiceModel.Jobs;
 using api.Models.ServiceModel.Projects;
 using api.Models.ServiceModel.Times;
 using api.Models.ServiceModel.Users;
+using api.Models.ServiceModel.WorkedTimes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -48,8 +49,7 @@ namespace api.Extensions.DependencyInjection
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IJobService, JobService>();
             services.AddTransient<ITimeService, TimeService>();
-
-
+            services.AddTransient<IWorkedTimeService, WorkedTimeService>();
         }
 
         public static void ConfigureOptions(this IServiceCollection services, IConfiguration config)

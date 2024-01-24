@@ -32,6 +32,12 @@ namespace api.Models.ServiceModel.Projects
                                         .IncludeUserProject()
                                         .WhereUserId(userId)
                                         .ToListAsync();
+
+        public async Task<Project> GetProjectByJob(int jobId)
+            => await _dbContext.Projects.IncludeUserProject()
+                                   .WhereJobId(jobId)
+                                   .FirstOrDefaultAsync();
+
         public async Task<(bool success, Project project, string error)> FindProject(int projectId)
         {
             Project = await _dbContext.Projects.WhereId(projectId)

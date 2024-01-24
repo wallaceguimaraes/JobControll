@@ -43,7 +43,8 @@ namespace api.Migrations
                         .HasColumnName("UltimaAtualizacao");
 
                     b.Property<int>("ProjectId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("IdProjeto");
 
                     b.Property<string>("Title")
                         .HasMaxLength(45)
@@ -51,7 +52,8 @@ namespace api.Migrations
                         .HasColumnName("Titulo");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("IdUsuario");
 
                     b.HasKey("Id");
 
@@ -105,12 +107,13 @@ namespace api.Migrations
                         .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("EndedAt")
+                    b.Property<DateTime?>("EndedAt")
                         .HasColumnType("datetime2")
                         .HasColumnName("DataFim");
 
                     b.Property<int>("JobId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("IdTarefa");
 
                     b.Property<DateTime>("StartedAt")
                         .HasColumnType("datetime2")
@@ -204,18 +207,61 @@ namespace api.Migrations
                     b.ToTable("Usuario", "cadastro");
                 });
 
+            modelBuilder.Entity("api.Models.EntityModel.WorkedTimes.WorkedTime", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("Days")
+                        .HasColumnType("int")
+                        .HasColumnName("Dias");
+
+                    b.Property<decimal?>("Hours")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("Horas");
+
+                    b.Property<int?>("JobId")
+                        .HasColumnType("int")
+                        .HasColumnName("IdTarefa");
+
+                    b.Property<int?>("Months")
+                        .HasColumnType("int")
+                        .HasColumnName("Meses");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int")
+                        .HasColumnName("IdProjeto");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId")
+                        .IsUnique()
+                        .HasFilter("[IdTarefa] IS NOT NULL");
+
+                    b.HasIndex("ProjectId")
+                        .IsUnique()
+                        .HasFilter("[IdProjeto] IS NOT NULL");
+
+                    b.ToTable("TempoTrabalhado", "cadastro");
+                });
+
             modelBuilder.Entity("api.Models.EntityModel.Jobs.Job", b =>
                 {
                     b.HasOne("api.Models.EntityModel.Projects.Project", "Project")
                         .WithMany("Jobs")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("api.Models.EntityModel.Users.User", "User")
                         .WithMany("Jobs")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -253,9 +299,30 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("api.Models.EntityModel.WorkedTimes.WorkedTime", b =>
+                {
+                    b.HasOne("api.Models.EntityModel.Jobs.Job", "Job")
+                        .WithOne("WorkedTime")
+                        .HasForeignKey("api.Models.EntityModel.WorkedTimes.WorkedTime", "JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("api.Models.EntityModel.Projects.Project", "Project")
+                        .WithOne("WorkedTime")
+                        .HasForeignKey("api.Models.EntityModel.WorkedTimes.WorkedTime", "ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("api.Models.EntityModel.Jobs.Job", b =>
                 {
                     b.Navigation("Times");
+
+                    b.Navigation("WorkedTime");
                 });
 
             modelBuilder.Entity("api.Models.EntityModel.Projects.Project", b =>
@@ -263,6 +330,8 @@ namespace api.Migrations
                     b.Navigation("Jobs");
 
                     b.Navigation("UserProjects");
+
+                    b.Navigation("WorkedTime");
                 });
 
             modelBuilder.Entity("api.Models.EntityModel.Users.User", b =>

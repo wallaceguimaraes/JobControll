@@ -9,7 +9,7 @@ namespace api.Models.EntityModel.Times
         public int Id { get; set; }
         public int JobId { get; set; }
         public DateTime StartedAt { get; set; }
-        public DateTime EndedAt { get; set; }
+        public DateTime? EndedAt { get; set; }
         public Job? Job { get; set; }
     }
 }

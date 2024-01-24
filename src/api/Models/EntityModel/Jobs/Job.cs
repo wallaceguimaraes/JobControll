@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Models.EntityModel.Projects;
 using api.Models.EntityModel.Times;
 using api.Models.EntityModel.Users;
+using api.Models.EntityModel.WorkedTimes;
 
 namespace api.Models.EntityModel.Jobs
 {
@@ -20,5 +21,6 @@ namespace api.Models.EntityModel.Jobs
         public User User { get; set; }
         public Project Project { get; set; }
         public ICollection<Time?> Times { get; set; }
+        public WorkedTime? WorkedTime { get; set; }
     }
 }

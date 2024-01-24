@@ -7,9 +7,9 @@ namespace api.Models.ResultModel.Successes.Jobs
     {
         public JobJson() { }
 
-        public JobJson(Job project)
+        public JobJson(Job job)
         {
-            Job = project;
+            Job = job;
         }
 
         public Job Job { get; set; }
